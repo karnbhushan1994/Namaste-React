@@ -75,6 +75,63 @@ body {
   color: #fff;
 }
 
+.search {
+  text-align: center;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.search input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.search button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.search button:hover {
+  background-color: #0056b3;
+}
+
+.res-container {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  display: flex;
+}
+
+.res-card {
+  background-color: #fff;
+  border-radius: 5px;
+  width: 300px;
+  margin: 10px;
+  padding: 10px;
+  transition: box-shadow .3s, border .3s;
+}
+
+.res-card:hover {
+  border: 1px solid #007bff;
+  box-shadow: 0 4px 8px #0003;
+}
+
+.res-logo {
+  object-fit: cover;
+  border-radius: 5px;
+  width: 100%;
+}
+
 @media (width <= 768px) {
   .header {
     text-align: center;
@@ -88,32 +145,22 @@ body {
   .nav-items ul li {
     margin: 10px 0;
   }
-}
 
-.search {
-  padding: 10px;
-}
+  .body h1 {
+    font-size: 2rem;
+  }
 
-.res-card {
-  border-radius: 5px;
-  width: 350px;
-  margin: 10px;
-  padding: 5px;
-}
+  .body p {
+    font-size: 1rem;
+  }
 
-.res-card:hover {
-  border: 1px solid #000;
-  box-shadow: 0 2px 4px #0000001a;
-}
+  .res-card {
+    width: 100%;
+    max-width: 90%;
+  }
 
-.res-logo {
-  border-radius: 5px;
-  width: 100%;
-}
-
-.res-container {
-  flex-wrap: wrap;
-  justify-content: center;
-  display: flex;
+  .search input, .search button {
+    font-size: 14px;
+  }
 }
 /*# sourceMappingURL=index.2212206d.css.map */
