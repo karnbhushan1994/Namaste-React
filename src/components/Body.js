@@ -1,28 +1,110 @@
 import RestaurantCard from "./RestaurantCard";
-import { resList } from "../utils/mockData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Shimmer from "./Shimmer";
 
 const Body = () => {
-  const [restaurantList, setRestaurantList] = useState(resList);
+  const [restaurantList, setRestaurantList] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [cuisineFilter, setCuisineFilter] = useState("");
+  const [costFilter, setCostFilter] = useState("");
+  const [vegFilter, setVegFilter] = useState(false);
+  const [deliveryTimeFilter, setDeliveryTimeFilter] = useState("");
 
-  // Function to filter top-rated restaurants
-  const filterTopRated = () => {
-    const filteredRestaurants = resList.filter(
-      (restaurant) => restaurant.data.avgRating >= 4
-    );
-    setRestaurantList(filteredRestaurants);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Fetch Restaurant Data
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      const restaurants =
+        data?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants || [];
+
+      setRestaurantList(restaurants); 
+      
+      setFilteredList(restaurants);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  // Function to handle search
-  const handleSearch = () => {
-    const filteredRestaurants = resList.filter((restaurant) =>
-      restaurant.data.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setRestaurantList(filteredRestaurants);
+  // Function to filter restaurants
+  const applyFilters = () => {
+    let filteredRestaurants = [...restaurantList];
+
+    // Search Filter
+    if (searchText) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) =>
+        restaurant.info.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    // Top Rated Filter
+    if (costFilter === "highRated") {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) => restaurant.info.avgRating >= 4.6
+      );
+    }
+
+    // Cuisine Filter
+    if (cuisineFilter) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) =>
+        restaurant.info.cuisines.includes(cuisineFilter)
+      );
+    }
+
+    // Cost Filter
+    if (costFilter === "low") {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) => restaurant.info.costForTwo < 30000
+      );
+    } else if (costFilter === "medium") {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) =>
+          restaurant.info.costForTwo >= 30000 && restaurant.info.costForTwo < 60000
+      );
+    } else if (costFilter === "high") {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) => restaurant.info.costForTwo >= 60000
+      );
+    }
+
+    // Veg Filter
+    if (vegFilter) {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) => restaurant.info.veg
+      );
+    }
+
+    // Delivery Time Filter
+    if (deliveryTimeFilter) {
+      filteredRestaurants = filteredRestaurants.filter(
+        (restaurant) =>
+          restaurant.info.sla.deliveryTime <= parseInt(deliveryTimeFilter, 10)
+      );
+    }
+
+    setFilteredList(filteredRestaurants);
   };
 
-  return (
+  useEffect(() => {
+    applyFilters();
+  }, [searchText, cuisineFilter, costFilter, vegFilter, deliveryTimeFilter]);
+
+  return restaurantList.length === 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
       <h1>Welcome to the Restaurant</h1>
       <p>Explore amazing dishes and enjoy your meals.</p>
@@ -35,21 +117,55 @@ const Body = () => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={applyFilters}>Search</button>
       </div>
 
-      {/* Filter Button */}
-      <div className="filter">
-        <button className="filter-btn" onClick={filterTopRated}>
-          Top Rated Restaurant
-        </button>
+      {/* Filters Section */}
+      <div className="filters">
+        {/* Cuisine Filter */}
+        <select onChange={(e) => setCuisineFilter(e.target.value)}>
+          <option value="">All Cuisines</option>
+          <option value="Chinese">Chinese</option>
+          <option value="Indian">Indian</option>
+          <option value="Italian">Italian</option>
+          <option value="Mexican">Mexican</option>
+        </select>
+
+        {/* Cost Filter */}
+        <select onChange={(e) => setCostFilter(e.target.value)}>
+          <option value="">All Prices</option>
+          <option value="low">₹ (Budget)</option>
+          <option value="medium">₹₹ (Mid-Range)</option>
+          <option value="high">₹₹₹ (Expensive)</option>
+          <option value="highRated">Top Rated</option>
+        </select>
+
+        {/* Veg Filter */}
+        <label>
+          <input
+            type="checkbox"
+            checked={vegFilter}
+            onChange={(e) => setVegFilter(e.target.checked)}
+          />
+          Vegetarian Only
+        </label>
+
+        {/* Delivery Time Filter */}
+        <select onChange={(e) => setDeliveryTimeFilter(e.target.value)}>
+          <option value="">Any Delivery Time</option>
+          <option value="20">Within 20 mins</option>
+          <option value="30">Within 30 mins</option>
+          <option value="45">Within 45 mins</option>
+        </select>
+
+        <button onClick={applyFilters}>Apply Filters</button>
       </div>
 
       {/* Restaurant List */}
       <div className="res-container">
-        {restaurantList.length > 0 ? (
-          restaurantList.map((restaurant) => (
-            <RestaurantCard key={restaurant.data.id} {...restaurant.data} />
+        {filteredList.length > 0 ? (
+          filteredList.map((restaurant) => (
+            <RestaurantCard key={restaurant.info.id} {...restaurant.info} />
           ))
         ) : (
           <p>No restaurants found</p>
