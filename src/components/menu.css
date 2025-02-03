@@ -1,0 +1,99 @@
+/* General Styles */
+.menu-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Restaurant Info */
+.restaurant-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.restaurant-info h1 {
+    font-size: 26px;
+    color: #222;
+}
+
+.cuisines, .cost {
+    font-size: 16px;
+    color: #777;
+    margin: 5px 0;
+}
+
+/* Menu Heading */
+.menu-heading {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+/* Menu List */
+.menu-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+/* Individual Menu Items */
+.menu-item {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Menu Item Title */
+.menu-item h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+/* Description */
+.description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+/* Price */
+.price {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .menu-container {
+        padding: 15px;
+    }
+    
+    .restaurant-info h1 {
+        font-size: 22px;
+    }
+
+    .menu-list {
+        grid-template-columns: 1fr;
+    }
+}
