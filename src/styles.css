@@ -208,3 +208,12 @@ body {
 
 
 /* login form */
+
+.user-card{
+  width: 300px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+}
