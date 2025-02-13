@@ -1,4 +1,4 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
@@ -12,6 +12,8 @@ const Body = () => {
   const [costFilter, setCostFilter] = useState("");
   const [vegFilter, setVegFilter] = useState(false);
   const [deliveryTimeFilter, setDeliveryTimeFilter] = useState("");
+
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
 
   useEffect(() => {
     fetchData();
@@ -34,17 +36,17 @@ const Body = () => {
           ?.restaurants || [];
 
       setRestaurantList(restaurants);
-
+      console.log(restaurants);
       setFilteredList(restaurants);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const useUserOnlineStatus =  UserOnlineStatus();
+  const useUserOnlineStatus = UserOnlineStatus();
 
-  if(useUserOnlineStatus === false) return <h1>You are offline please chekc Your internat connection</h1>
-  
+  if (useUserOnlineStatus === false)
+    return <h1>You are offline please chekc Your internat connection</h1>;
 
   // Function to filter restaurants
   const applyFilters = () => {
@@ -177,7 +179,11 @@ const Body = () => {
               key={restaurant.info.id}
               to={"/restaurantmenu/" + restaurant.info.id}
             >
-              <RestaurantCard {...restaurant.info} />
+              {restaurant.info.isOpen ? (
+                <RestaurantCardPromoted {...restaurant.info} />
+              ) : (
+                <RestaurantCard {...restaurant.info} />
+              )}
             </Link>
           ))
         ) : (
