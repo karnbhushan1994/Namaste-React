@@ -10,8 +10,9 @@ class UserClass extends React.Component {
     console.log(this.props.name +"child constructor");
   }
 
-   componentDidMount(){
+  componentDidMount(){
     console.log(this.props.name +"child component did mount ");
+
     //api call why in componentDidMount
 
 
@@ -39,3 +40,5 @@ class UserClass extends React.Component {
   }
 }
 export default UserClass;
+
+

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy ,Suspense} from "react";
 import ReactDOM from "react-dom/client";
 import "./styles.css"; // Import external CSS for styling
 import Header from "./components/Header"; // Import Header Component
@@ -8,6 +8,15 @@ import About from "./components/About";
 import  Contact  from "./components/Contact";
 import Error from "./components/Error";
 import Restaurantmenu from "./components/Restaurantmenu";
+//import Grocery from "./components/Grocery"
+
+// chunking 
+// Code Spliting 
+// lazy loading
+// dynamic bundling 
+// on demand loading
+//dynamic import
+const Grocery   = lazy(()=> import("./components/Grocery"));
 
 // Footer Component
 const Footer = () => {
@@ -59,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/grocery",
+        element:<Suspense fallback={<h1>Loading...</h1>}><Grocery /></Suspense>,
       },
     ],
   },

@@ -8,19 +8,41 @@ import { Component } from "react";
 class About extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      userInfo:{
+        name: "default",
+        location: "Default"
+      }
+    }
 
     console.log("parent constructor");
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log("Parent component did mount ");
+      const data =  await fetch("https://api.github.com/users/karnbhushan1994");
+      const json =  await data.json();
+
+      this.setState({
+        userInfo:json
+      })
+
+  }
+
+  componentDidUpdate(){
+
+  }
+
+  componentWillUnmount(){
+    console.log("componentWillUnmount will call ");
   }
 
   render() {
     console.log("parent render");
-    return (
+   const {login ,location } =  this.state.userInfo;
+    return ( 
       <div>
-        <User name={"raju (function)"} />
+        <User name={login}  location={location} />
         <UserClass name={"karan (class)"} location={"India"} />
         <UserClass name={"Elon (class)"} location={"Usa"} />
       </div>

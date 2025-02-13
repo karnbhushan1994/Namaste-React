@@ -2,6 +2,8 @@ import RestaurantCard from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import UserOnlineStatus from "../utils/onlineStatus";
+
 const Body = () => {
   const [restaurantList, setRestaurantList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
@@ -31,13 +33,18 @@ const Body = () => {
         data?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
           ?.restaurants || [];
 
-      setRestaurantList(restaurants); 
-      
+      setRestaurantList(restaurants);
+
       setFilteredList(restaurants);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  const useUserOnlineStatus =  UserOnlineStatus();
+
+  if(useUserOnlineStatus === false) return <h1>You are offline please chekc Your internat connection</h1>
+  
 
   // Function to filter restaurants
   const applyFilters = () => {
@@ -72,7 +79,8 @@ const Body = () => {
     } else if (costFilter === "medium") {
       filteredRestaurants = filteredRestaurants.filter(
         (restaurant) =>
-          restaurant.info.costForTwo >= 30000 && restaurant.info.costForTwo < 60000
+          restaurant.info.costForTwo >= 30000 &&
+          restaurant.info.costForTwo < 60000
       );
     } else if (costFilter === "high") {
       filteredRestaurants = filteredRestaurants.filter(
@@ -165,7 +173,12 @@ const Body = () => {
       <div className="res-container">
         {filteredList.length > 0 ? (
           filteredList.map((restaurant) => (
-            <Link key={restaurant.info.id} to={"/restaurantmenu/"+restaurant.info.id} ><RestaurantCard  {...restaurant.info} /></Link> 
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurantmenu/" + restaurant.info.id}
+            >
+              <RestaurantCard {...restaurant.info} />
+            </Link>
           ))
         ) : (
           <p>No restaurants found</p>
